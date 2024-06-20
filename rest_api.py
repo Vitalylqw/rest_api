@@ -86,6 +86,7 @@ async def send_telegram_message(message):
     """
     Асинхронная функция для отправки сообщения через Telegram Bot.
     """
+    bot = Bot(token=TELEGRAM_TOKEN)
     await bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=message)
 
 if __name__ == '__main__':
