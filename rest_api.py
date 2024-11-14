@@ -4,6 +4,7 @@ import os
 from flask import Flask, request, jsonify
 from telegram import Bot
 from dotenv import load_dotenv
+import json
 
 load_dotenv()
 
@@ -36,6 +37,27 @@ def index():
     <h1>Welcome to the REST API</h1>
     <p>Use the endpoint <code>/cleanup_sql_backup</code> to post your SQL backup data.</p>
     """
+
+
+@app.route('/vipiska_tbank', methods=['POST'])
+def send_vipiska_tbank():
+    logging.info("Received request at /vipiska_tbank")
+    try:
+        # Получение данных из запроса
+        data = request.json
+        data = json.dumps(data, ensure_ascii=False)
+        logging.info(f"Received data vipiska_tbank: {data}")
+
+        # Отправка сообщения через Telegram Bot
+        asyncio.run(send_telegram_message(data))
+
+        logging.info("Message sent to Telegram successfully")
+
+        return jsonify({"status": "success"}), 200
+    except Exception as e:
+        logging.error(f"Error occurred: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 
 @app.route('/cleanup_sql_backup', methods=['POST'])
 def cleanup_sql_backup():
